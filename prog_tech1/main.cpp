@@ -4,6 +4,11 @@
 int main()
 {
 	Fish fish;
+	
+
+	//int a[3];
+	//a = { 0 };
+	fish.printToScreen();
 	return 0;
 }
 

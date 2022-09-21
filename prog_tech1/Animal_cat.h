@@ -7,12 +7,11 @@ class Cat : public Animal
 public:
 
 	Cat() {
-		animalType = TYPE_CAT;
-		featureFieldsNum = 4;
+		setAnimalType(TYPE_CAT);
+		setFeatureFieldsNum(4);
 	};
 
 	~Cat() {};
-
 
 
 	strS(breed);
@@ -23,4 +22,11 @@ public:
 
 	strS(petName);
 
+	void printToScreen() override
+	{
+		printf("breed is: -%s-\n", breed);
+		printf("color is: -%s-\n", color);
+		printf("ownerName is: -%s-\n", ownerName);
+		printf("petName is: -%s-\n", petName);
+	}
 };

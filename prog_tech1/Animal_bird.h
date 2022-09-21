@@ -7,8 +7,8 @@ class Bird : public Animal
 public:
 
 	Bird() {
-		animalType = TYPE_BIRD;
-		featureFieldsNum = 4;
+		setAnimalType(TYPE_BIRD);
+		setFeatureFieldsNum(4);
 	};
 
 	~Bird() {};
@@ -21,5 +21,13 @@ public:
 	strL(diet);
 
 	strL(habitat);
+
+	void printToScreen() override
+	{
+		printf("breed is: -%s-\n", breed);
+		printf("color is: -%s-\n", color);
+		printf("diet is: -%s-\n", diet);
+		printf("habitat is: -%s-\n", habitat);
+	}
 
 };
