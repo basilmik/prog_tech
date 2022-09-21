@@ -14,13 +14,13 @@ public:
 	~Cat() {};
 
 
-	strS(breed);
+	str(breed);
 
-	strS(color);
+	str(color);
 
-	strS(ownerName);
+	str(ownerName);
 
-	strS(petName);
+	str(petName);
 
 	void printToScreen() override
 	{

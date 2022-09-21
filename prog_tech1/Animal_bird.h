@@ -14,13 +14,13 @@ public:
 	~Bird() {};
 
 
-	strS(breed);
+	str(breed);
 
-	strS(color);
+	str(color);
 
-	strL(diet);
+	str(diet);
 
-	strL(habitat);
+	str(habitat);
 
 	void printToScreen() override
 	{

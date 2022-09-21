@@ -9,6 +9,8 @@ int main()
 	//int a[3];
 	//a = { 0 };
 	fish.printToScreen();
+	fish.setField(3);
+	fish.printToScreen();
 	return 0;
 }
 
