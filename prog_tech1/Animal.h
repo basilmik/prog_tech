@@ -21,7 +21,12 @@ private:
 
 	int featureFieldsNum;
 
+	
+
 protected:
+	
+	char** prop;
+
 	Animal() 
 	{ 
 		animalType = 0; 
@@ -49,6 +54,19 @@ protected:
 	{
 		return featureFieldsNum;
 	}
+
+
+
+
+	char* operator[](int _n)
+	{
+		if (_n >= 0 && _n < getFeatureFieldsNum())
+			return prop[_n];
+		else
+			return nullptr;
+	}
+
+
 
 	virtual void printToScreen() = 0;
 	void createOfType() {};
