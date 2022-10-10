@@ -13,13 +13,27 @@ public:
 	Fish();
 	
 	~Fish();
+	char* getFeatureName(int _n) override
+	{
+		switch (_n)
+		{
+		case 0:
+			return (char*)"breed";
+		case 1:
+			return (char*)"color";
+		case 2:
+			return (char*)"diet";
+		default:
+			return (char*)"unknown";
+		}
+	};
 
-	void printToScreen() override
+	void printFeaturesToScreen() override
 	{
 		printf("FISH:\n");
-		printf("breed is: -%s-\n", prop[BREED]);
-		printf("color is: -%s-\n", prop[COLOR]);
-		printf("diet is: -%s-\n", prop[DIET]);
+		for (int i = 0; i < getFeatureFieldsNum(); i++)
+			printf("%s is: -%s-\n", getFeatureName(i), prop[i]);
+
 	};
 
 };

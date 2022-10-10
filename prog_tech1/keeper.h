@@ -1,7 +1,7 @@
 
 #include "Animal_fish.h"
-
-
+#include "Animal_bird.h"
+#include "Animal_cat.h"
 
 
 
@@ -45,8 +45,9 @@ public:
 
 	int editAnimalMenu(int _n);
 
-
-
+	int editOneAnimalField(int _id);
+	int setOneAnimalFeature(int _id, int _n);
+	int editAllAnimalFields(int _id);
 
 };
 

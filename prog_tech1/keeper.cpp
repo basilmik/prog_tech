@@ -23,7 +23,7 @@ void Keeper::printAllAnimalsToScreen()
 {
 	for (int i = 0; i < numOfAnimals; i++)
 	{
-		animals[i]->printToScreen();
+		animals[i]->printFeaturesToScreen();
 	}
 
 };
@@ -113,7 +113,42 @@ int Keeper::addAnimalMenu() {
 
 void Keeper::deleteAnimal() {};
 
-int Keeper::editAnimalMenu(int _n)
+int Keeper::setOneAnimalFeature(int _id, int _n)
+{
+	/*char* newVal = (char*)calloc(MAXLEN_LONG, sizeof(char));
+	if (newVal == nullptr)
+		throw 0;*/
+
+	printf("enter new value: ");
+	//gets_s(newVal, 511);
+
+	char newVal[511] = { 0 };
+	mscanf("%s", &newVal);
+	animals[_id]->setField(newVal, _n);
+
+	return 0;
+}
+
+int Keeper::editAllAnimalFields(int _id)
+{
+	for (int i = 0; i < animals[_id]->getFeatureFieldsNum(); i++)
+		setOneAnimalFeature(_id, i);
+
+	return 0;
+}
+
+int Keeper::editOneAnimalField(int _id)
+{
+	int n = -1;
+	printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureFieldsNum());
+	scanInRange("%d", &n, 0, animals[_id]->getFeatureFieldsNum());
+	setOneAnimalFeature(_id, n);
+
+	return 0;
+}
+
+
+int Keeper::editAnimalMenu(int _id)
 {
 	// choose field to edit/reset
 
@@ -121,25 +156,35 @@ int Keeper::editAnimalMenu(int _n)
 	while (1)
 	{
 		printf("EDIT MENU:\n");
-		printf("-1 exit\n1choose field to edit\n2 edit all fields\n");
-		printf("-> ");
-		scanf("%d", &take);
+		printf("-1 exit\n1 edit one field\n2 edit all fields\n3 see field values\n");
+		mscanf("%d", &take);
 
-		/*switch (take)
+		switch (take)
 		{
 		case -1:
 			return 0;
+
 		case 1:
-
+			editOneAnimalField(_id);
 			break;
 
-		case 0:
-
+		case 2:
+			editAllAnimalFields(_id);
 			break;
-		}*/
+
+		case 3:
+			animals[_id]->printFeaturesToScreen();
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
+
+		}
 
 	}
 
+	return 0;
 };
 
 

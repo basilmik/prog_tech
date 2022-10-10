@@ -27,8 +27,6 @@ char* Animal::operator[](int _n)
 }
 
 
-void Animal::editField() {};
-
 
 void Animal::setAnimalType(int _animalType)
 {
@@ -51,17 +49,9 @@ int Animal::getFeatureFieldsNum()
 }
 
 	
-void Animal::setField(int _n)
+void Animal::setField(char* _val, int _n)
 {
-	char* newVal = (char*)calloc(MAXLEN_LONG, sizeof(char));
-	if (newVal == nullptr)
-		throw 0;
-
-	gets_s(newVal, 511);
-
-	strcpy(prop[_n - 1], newVal);
-
-	free(newVal);
+	strcpy(prop[_n], _val);
 }
 
 // EOF

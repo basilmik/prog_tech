@@ -26,22 +26,24 @@ public:
 
 	char* operator[](int _n);
 
-	void editField();
 
 
 	void setAnimalType(int _animalType);
 
 	void setFeatureFieldsNum(int _featureFieldsNum);
 
+
 	int getAnimalType();
 
 	int getFeatureFieldsNum();
 
-	virtual void printToScreen() {};
 
-	void setField(int _n);
+	virtual void printFeaturesToScreen() = 0;
+
+	virtual char* getFeatureName(int _n) = 0;
+
+	void setField(char* _val, int _n);
 };
 
-;
 
 // EOF

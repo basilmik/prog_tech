@@ -20,7 +20,6 @@ int menu()
 	while (1)
 	{
 		
-
 		mscanf("%d", &take);
 
 		switch (take)
@@ -75,6 +74,7 @@ int menu()
 			printf("unknown command\n");
 			break;
 		}
+
 		printf("MAIN MENU\n");
 
 	}
