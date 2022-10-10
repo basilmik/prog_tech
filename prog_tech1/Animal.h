@@ -70,7 +70,7 @@ protected:
 	
 
 	virtual void printToScreen() = 0;
-	void createOfType() {};
+
 	void editField() {};
 
 public:
