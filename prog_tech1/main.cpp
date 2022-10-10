@@ -1,22 +1,27 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
-#include "string.h"
-#include "Animal_fish.h"
+
+#include "keeper.h"
+#include "myio.h"
 
 void seeCommandList()
 {
-	printf("commands:\n0 see command list\n-1  - exit");
+	printf("MAIN MENU\n");
+	printf("commands:\n0 see command list\n-1  - exit\n");
 }
 
 int menu()
 {
 	seeCommandList();
 
+	Keeper zoo;
+
 	int take = 0;
 	while (1)
 	{
-		printf("command: ");
-		scanf("%d", &take);
+		
+
+		mscanf("%d", &take);
 
 		switch (take)
 		{
@@ -50,13 +55,27 @@ int menu()
 			break;
 
 		case 6:
+			zoo.addAnimalMenu();
 			// add new animal
 			break;
 
 		case 7:
 			// edit an animal
 			break;
+
+		case 8:
+			// delete an animal
+			break;
+
+		case 9:
+			zoo.printAllAnimalsToScreen();
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
 		}
+		printf("MAIN MENU\n");
 
 	}
 
@@ -67,14 +86,10 @@ int menu()
 
 int main()
 {
-	Fish fish;
-	
 
-	//int a[3];
-	//a = { 0 };
-	fish.printToScreen();
-	fish.setField(3);
-	fish.printToScreen();
+	menu();
+
+
 	return 0;
 }
 

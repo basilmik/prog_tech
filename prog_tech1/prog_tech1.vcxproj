@@ -139,7 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animal.cpp" />
+    <ClCompile Include="keeper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Animal_fish.cpp" />
+    <ClCompile Include="myio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animal.h" />
@@ -147,6 +151,7 @@
     <ClInclude Include="Animal_cat.h" />
     <ClInclude Include="Animal_fish.h" />
     <ClInclude Include="keeper.h" />
+    <ClInclude Include="myio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
