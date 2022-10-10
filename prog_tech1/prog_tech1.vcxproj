@@ -146,6 +146,7 @@
     <ClInclude Include="Animal_bird.h" />
     <ClInclude Include="Animal_cat.h" />
     <ClInclude Include="Animal_fish.h" />
+    <ClInclude Include="keeper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

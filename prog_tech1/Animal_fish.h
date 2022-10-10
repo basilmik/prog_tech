@@ -37,14 +37,6 @@ public:
 		printf("diet is: -%s-\n", prop[DIET]);
 	}
 
-	void setField(int _n)
-	{
-		char* newVal = (char *)calloc(MAXLEN_LONG, sizeof(char));
-		scanf("%s", newVal);
-
-		strcpy(prop[_n-1], newVal);
-
-		free(newVal);
-	}
+	
 
 };

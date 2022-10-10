@@ -32,5 +32,8 @@
     <ClInclude Include="Animal_cat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="keeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

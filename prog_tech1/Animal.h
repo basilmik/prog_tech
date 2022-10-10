@@ -1,6 +1,7 @@
 #include "stdio.h"
+#include <string.h>
 #include "malloc.h"
-#include < string.h >
+
 
 #define TYPE_FISH 1
 #define TYPE_BIRD 2
@@ -66,13 +67,29 @@ protected:
 			return nullptr;
 	}
 
-
+	
 
 	virtual void printToScreen() = 0;
 	void createOfType() {};
 	void editField() {};
 
+public:
 
+	void setField(int _n)
+	{
+		char* newVal = (char*)calloc(MAXLEN_LONG, sizeof(char));
+		if (newVal == nullptr)
+			throw 0;
+
+		gets_s(newVal, 511);
+
+		//fgets(newVal, MAXLEN_LONG, )
+		//scanf("%s", newVal);
+
+		strcpy(prop[_n - 1], newVal);
+
+		free(newVal);
+	}
 };
 
 // EOF
