@@ -1,3 +1,4 @@
+#pragma once
 #include "stdio.h"
 
 #define TYPE_FISH 1
@@ -6,7 +7,6 @@
 
 
 #define MAXLEN_LONG 512
-
 
 
 class Animal
@@ -27,7 +27,6 @@ public:
 	char* operator[](int _n);
 
 
-
 	void setAnimalType(int _animalType);
 
 	void setFeatureFieldsNum(int _featureFieldsNum);
@@ -38,9 +37,9 @@ public:
 	int getFeatureFieldsNum();
 
 
-	virtual void printFeaturesToScreen() = 0;
+	virtual void printFeaturesToScreen() {};
 
-	virtual char* getFeatureName(int _n) = 0;
+	virtual char* getFeatureName(int _n) { return nullptr; };
 
 	void setField(char* _val, int _n);
 };

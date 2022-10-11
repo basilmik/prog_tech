@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Animal.h"
 
 #define BREED 0
@@ -13,6 +13,7 @@ public:
 	Fish();
 	
 	~Fish();
+
 	char* getFeatureName(int _n) override
 	{
 		switch (_n)

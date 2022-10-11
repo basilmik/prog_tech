@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animal.cpp" />
+    <ClCompile Include="Animal_bird.cpp" />
+    <ClCompile Include="Animal_cat.cpp" />
     <ClCompile Include="keeper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Animal_fish.cpp" />

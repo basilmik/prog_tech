@@ -1,38 +1,43 @@
-//
-//#include "Animal.h"
-//#define BREED 0
-//#define COLOR 1
-//#define OWNER 2
-//#define NAME 3
-//
-//class Cat : public Animal
-//{
-//public:
-//
-//	Cat() {
-//		setAnimalType(TYPE_CAT);
-//		int fieldNum = 4;
-//		setFeatureFieldsNum(fieldNum);
-//
-//		prop = (char**)malloc(fieldNum * sizeof(char*));
-//		if (prop == nullptr)
-//			throw 0; // EXEPTION
-//
-//		for (int i = 0; i < fieldNum; i++)
-//		{
-//			prop[i] = (char*)calloc(512, sizeof(char));
-//		}
-//	};
-//
-//	~Cat() {};
-//
-//
-//	void printToScreen() override
-//	{
-//		printf("CAT:\n");
-//		printf("breed is: -%s-\n", prop[BREED]);
-//		printf("color is: -%s-\n", prop[COLOR]);
-//		printf("ownerName is: -%s-\n", prop[OWNER]);
-//		printf("petName is: -%s-\n", prop[NAME]);
-//	}
-//};
+#pragma once
+#include "Animal.h"
+
+#define BREED 0
+#define COLOR 1
+#define OWNER 2
+#define NAME 3
+
+class Cat : public Animal
+{
+public:
+
+	Cat();
+
+	~Cat();
+
+
+	char* getFeatureName(int _n) override
+	{
+		switch (_n)
+		{
+		case 0:
+			return (char*)"breed";
+		case 1:
+			return (char*)"color";
+		case 2:
+			return (char*)"ownerName";
+		case 3:
+			return (char*)"petName";
+		default:
+			return (char*)"unknown";
+		}
+	};
+
+	void printFeaturesToScreen() override
+	{
+		printf("BIRD:\n");
+		for (int i = 0; i < getFeatureFieldsNum(); i++)
+			printf("%s is: -%s-\n", getFeatureName(i), prop[i]);
+
+	};
+
+};

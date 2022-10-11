@@ -3,32 +3,59 @@
 
 #include "malloc.h"
 #include "myio.h"
+#include "string.h" 
 
-Keeper::Keeper() {
+Keeper::Keeper() 
+{
 	animals = nullptr;
 	numOfAnimals = 0;
+
+	strcpy(loadFilePath, "\0");
+	strcpy(saveFilePath, "\0");
+
 };
 
-Keeper::~Keeper() {};
-
-
-void Keeper::setLoadFilePath() {};
-
-void Keeper::setSaveFilePath() {};
-
-
-void Keeper::printOneAnimalToscreen() {};
-
-void Keeper::printAllAnimalsToScreen()
+Keeper::~Keeper() 
 {
 	for (int i = 0; i < numOfAnimals; i++)
 	{
-		animals[i]->printFeaturesToScreen();
+		delete animals[i];
 	}
 
 };
 
-void Keeper::loadAllAnimalsFromFile() {}; // loadFilePath
+void Keeper::printOneAnimalToscreen(int _id) 
+{
+	animals[_id]->printFeaturesToScreen();
+};
+
+void Keeper::printAllAnimalsToScreen()
+{
+	for (int i = 0; i < numOfAnimals; i++)
+		printOneAnimalToscreen(i);
+};
+
+
+void Keeper::setLoadFilePath(char* _path)
+{
+	strcpy(loadFilePath, _path);
+};
+
+void Keeper::setSaveFilePath(char* _path) 
+{
+	strcpy(loadFilePath, _path);
+};
+
+
+
+
+
+
+void Keeper::loadAllAnimalsFromFile() 
+{
+
+
+}; // loadFilePath
 void Keeper::saveAllAnimalsToFile() {}; // saveFilePath
 
 
@@ -39,42 +66,45 @@ int Keeper::takeTypeToAdd()
 	printf("TYPE_FISH 1\nTYPE_BIRD 2\nTYPE_CAT 3\n");
 	printf("enter type of animal you would like to create: ");
 
-	/*while (typeInputed <= 0 || typeInputed > 3)
-		scanf("%d", &typeInputed);*/
 	scanInRange("%d", &typeInputed, 1, 3);
 
 	return typeInputed;
 }
 
 
-Animal* Keeper::createAnimalByType(int _t)
+Animal* Keeper::createAnimalOfType(int _t)
 {
 	switch (_t)
 	{
-	case 1: // fish
+	case 1:
 		return (Animal*) new Fish();
 
-		//case 2: // bird
-		//	return (Animal*) new Bird();
+	case 2:
+		return (Animal*) new Bird();
 
-		//case 3: // cat
-		//	return (Animal*) new Cat();
+	case 3:
+		return (Animal*) new Cat();
 	}
+
+	return nullptr; // throw
 }
 
 void Keeper::addAnimal()
 {
 	int type = takeTypeToAdd();
 
-	Animal* animalToAdd = createAnimalByType(type);
+	Animal* animalToAdd = createAnimalOfType(type);
+	if (animalToAdd == nullptr)
+		throw -1;
 
 	numOfAnimals++;
 	animals = (Animal**)realloc(animals, numOfAnimals);
+	
+	if (animals == NULL)
+		throw -1;
 
 	animals[numOfAnimals - 1] = animalToAdd;
-
 }
-
 
 int Keeper::addAnimalMenu() {
 
@@ -111,18 +141,69 @@ int Keeper::addAnimalMenu() {
 	return -1; // throw
 };
 
-void Keeper::deleteAnimal() {};
+
+
+
+int Keeper::deleteOneAnimal(int _id) 
+{
+	delete animals[_id];
+	for (int i = _id; i < numOfAnimals - 1; i++)
+		animals[i] = animals[i + 1];
+	numOfAnimals--;
+	return 0;
+};
+
+int Keeper::deleteAnimal() {
+	int id = -1;
+	printf("enter id of animal to delete (from 0 to %d):\n", numOfAnimals-1);
+	scanInRange("%d", &id, 0, numOfAnimals-1);
+
+	deleteAnimalMenu(id);
+	return 0;
+};
+
+int Keeper::deleteAnimalMenu(int _id) 
+{
+	int take = 0;
+	while (1)
+	{
+		printf("DELETE MENU:\n");
+		printf("-1 exit\n1 delete %d animal\n2 see field values\n", _id);
+		mscanf("%d", &take);
+
+		switch (take)
+		{
+		case -1:
+			return 0;
+
+		case 1:
+			deleteOneAnimal(_id);
+			break;
+
+		case 2:
+			printOneAnimalToscreen(_id);
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
+
+		}
+
+	}
+
+
+	return 0;
+};
+
+
 
 int Keeper::setOneAnimalFeature(int _id, int _n)
 {
-	/*char* newVal = (char*)calloc(MAXLEN_LONG, sizeof(char));
-	if (newVal == nullptr)
-		throw 0;*/
-
-	printf("enter new value: ");
-	//gets_s(newVal, 511);
 
 	char newVal[511] = { 0 };
+	printf("enter new value: ");
+
 	mscanf("%s", &newVal);
 	animals[_id]->setField(newVal, _n);
 
@@ -140,7 +221,7 @@ int Keeper::editAllAnimalFields(int _id)
 int Keeper::editOneAnimalField(int _id)
 {
 	int n = -1;
-	printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureFieldsNum());
+	printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureFieldsNum()-1);
 	scanInRange("%d", &n, 0, animals[_id]->getFeatureFieldsNum());
 	setOneAnimalFeature(_id, n);
 
@@ -150,8 +231,6 @@ int Keeper::editOneAnimalField(int _id)
 
 int Keeper::editAnimalMenu(int _id)
 {
-	// choose field to edit/reset
-
 	int take = 0;
 	while (1)
 	{
@@ -173,7 +252,8 @@ int Keeper::editAnimalMenu(int _id)
 			break;
 
 		case 3:
-			animals[_id]->printFeaturesToScreen();
+			printOneAnimalToscreen(_id);
+			
 			break;
 
 		default:
@@ -187,6 +267,14 @@ int Keeper::editAnimalMenu(int _id)
 	return 0;
 };
 
+int Keeper::editAnimal()
+{
+	int n = -1;
+	printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals-1);
+	scanInRange("%d", &n, 0, numOfAnimals-1);
+	editAnimalMenu(n);
+	return 0;
+}
 
 
 // EOF

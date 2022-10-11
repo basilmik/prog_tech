@@ -17,6 +17,8 @@ int menu()
 	Keeper zoo;
 
 	int take = 0;
+	int n = -1;
+
 	while (1)
 	{
 		
@@ -50,20 +52,20 @@ int menu()
 			break;
 
 		case 5:
-			// see animals
+			zoo.printAllAnimalsToScreen();
 			break;
 
-		case 6:
+		case 6:// add new animal
 			zoo.addAnimalMenu();
-			// add new animal
 			break;
 
 		case 7:
-			// edit an animal
+			zoo.editAnimal();
 			break;
 
 		case 8:
 			// delete an animal
+			zoo.deleteAnimal();
 			break;
 
 		case 9:

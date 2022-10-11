@@ -1,8 +1,7 @@
-
+#pragma once
 #include "Animal_fish.h"
 #include "Animal_bird.h"
 #include "Animal_cat.h"
-
 
 
 class Keeper
@@ -17,36 +16,50 @@ public:
 	int numOfAnimals;
 
 	char loadFilePath[512];
-	void setLoadFilePath();
+	void setLoadFilePath(char* _path);
 
 	char saveFilePath[512];
-	void setSaveFilePath();
+	void setSaveFilePath(char* _path);
 	
+	void loadAllAnimalsFromFile(); // loadFilePath
+	void saveAllAnimalsToFile(); // saveFilePath
 
-	void printOneAnimalToscreen();
+	int isLoadFilePathSet()
+	{
+		return (loadFilePath != "\0");
+	}
+
+	int isSaveFilePathSet()
+	{
+		return (saveFilePath != "\0");
+	}
+
+	void printOneAnimalToscreen(int _id);
 
 	void printAllAnimalsToScreen();
 
-	void loadAllAnimalsFromFile(); // loadFilePath
-	void saveAllAnimalsToFile(); // saveFilePath
+	
 
 
 	int takeTypeToAdd();
 
-	Animal* createAnimalByType(int _t);
+	Animal* createAnimalOfType(int _t);
 
 	void addAnimal();
 
-
-
 	int addAnimalMenu();
 
-	void deleteAnimal();
+	int deleteAnimal();
+	int deleteOneAnimal(int _id);
+	int deleteAnimalMenu(int _id);
 
 	int editAnimalMenu(int _n);
+	int editAnimal();
 
 	int editOneAnimalField(int _id);
+
 	int setOneAnimalFeature(int _id, int _n);
+
 	int editAllAnimalFields(int _id);
 
 };

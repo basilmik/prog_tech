@@ -1,15 +1,9 @@
-#include "Animal_fish.h"
-#include "stdio.h"
+#include "Animal_bird.h"
 #include "malloc.h"
 
-#define BREED 0
-#define COLOR 1
-#define DIET 2
-
-
-Fish::Fish() {
-	setAnimalType(TYPE_FISH);
-	int fieldNum = 3;
+Bird::Bird() {
+	setAnimalType(TYPE_BIRD);
+	int fieldNum = 4;
 	setFeatureFieldsNum(fieldNum);
 
 	prop = (char**)malloc(fieldNum * sizeof(char*));
@@ -22,8 +16,4 @@ Fish::Fish() {
 	}
 };
 
-
-Fish::~Fish() {};
-
-
-
+Bird::~Bird() {};
