@@ -122,9 +122,9 @@ int Keeper::loadAllAnimalsFromFile()
 	int type = 0;
 	int originalNumOfAnimals = numOfAnimals;
 
-	for (int i = 0; i < num; i++)
+	for (int i = 1; i <= num; i++)
 	{
-		if (fscanf(fpin, "%d %d\n", &type, &fieldNum) != 2 || isInRange(type, 0, 4) || isInRange(fieldNum, 2, 5))
+		if (fscanf(fpin, "%d %d\n", &type, &fieldNum) != 2 || !isInRange(type, 0, 4) || !isInRange(fieldNum, 2, 5))
 		{
 			fclose(fpin);
 			return -1; // throw data corruption
@@ -136,17 +136,16 @@ int Keeper::loadAllAnimalsFromFile()
 		char fieldValue[511];
 		for (int n = 0; n < fieldNum; n++)
 		{
-			if (fscanf(fpin, "%s\n", fieldValue) != 1)
+			if (fscanf(fpin, "%s\n", &fieldValue) != 1)
 				return -1; // THROW DATA COPPUPTION
 			setOneAnimalFeature(originalNumOfAnimals + i - 1, n, fieldValue);
 		}
-
 	}
 
 	fclose(fpin);
 	return 0;
 
-}; // loadFilePath
+};
 
 
 int Keeper::saveAllAnimalsToFile() {

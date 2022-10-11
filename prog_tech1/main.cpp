@@ -9,8 +9,8 @@
 void seeCommandList()
 {
 	printf("MAIN MENU\n");
-	printf("commands:\n100 - clear screen\n-1  - exit\n1 - file path's menu\n2 - save all animals to file\n3 - load all animals from file\n");
-	printf("4 - print animals to screen\n5 - add menu\n6 - edit menu\n7 - delete menu\n8 - print all to screen\n");
+	printf("commands:\n0 - see command list\n100 - clear screen\n-1  - exit\n1 - file path's menu\n2 - save all animals to file\n3 - load all animals from file\n");
+	printf("4 - print animals to screen\n5 - add menu\n6 - edit menu\n7 - delete menu\n8 - ----\n");
 	printf("101 - preset lofe path to load.txt and save.txt\n");
 }
 
@@ -20,15 +20,18 @@ int menu()
 
 	int take = 0;
 	int n = -1;
-
+	seeCommandList();
 	while (1)
 	{
-		system("cls");
-		seeCommandList();
+		//system("cls");
+		
 		mscanf("%d", &take);
 
 		switch (take)
 		{
+		case 0:
+			seeCommandList();
+			break;
 
 		case -1: // exit
 			return 0;
@@ -64,7 +67,7 @@ int menu()
 			break;
 
 		case 8:
-			zoo.printAllAnimalsToScreen();
+			//zoo.printAllAnimalsToScreen();
 			break;
 		
 		case 100:

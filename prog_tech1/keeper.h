@@ -18,8 +18,8 @@ public:
 
 	void presetPath()
 	{
-		setLoadFilePath((char*)"load.txt");
-		setSaveFilePath((char*)"save.txt");
+		setLoadFilePath((char*)"save_load.txt");
+		setSaveFilePath((char*)"save_load.txt");
 	}
 
 	int setFilePathMenu();
@@ -40,8 +40,6 @@ public:
 	
 	int loadAllAnimalsFromFile(); // loadFilePath
 	int saveAllAnimalsToFile(); // saveFilePath
-
-
 
 
 	int isLoadFilePathSet()
