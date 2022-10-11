@@ -4,14 +4,15 @@
 #include "malloc.h"
 #include "myio.h"
 #include "string.h" 
+#include <stdlib.h>
 
 Keeper::Keeper() 
 {
 	animals = nullptr;
 	numOfAnimals = 0;
 
-	strcpy(loadFilePath, "\0");
-	strcpy(saveFilePath, "\0");
+	strcpy(loadFilePath, "unknown");
+	strcpy(saveFilePath, "unknown");
 
 };
 
@@ -47,16 +48,110 @@ void Keeper::setSaveFilePath(char* _path)
 };
 
 
-
-
-
-
-void Keeper::loadAllAnimalsFromFile() 
+int Keeper::setFilePathMenu()
 {
+	int take = 0;
+	printf("SET FILE PATH MENU:\n");
+	printf("-1 exit\n1 set LOAD file path\n2 set SAVE file path\n0 set BOTH THE SAME\n3 see LOAD path\n4 see SAVE path\n");
 
+	char path[511] = { '\0' };
+
+	while (1)
+	{
+		mscanf("%d", &take);
+		switch (take)
+		{
+		case -1:
+			system("cls");
+			return 0;
+		case 0:
+			mscanf("%s", path);
+			setLoadFilePath(path);
+			setSaveFilePath(path);
+			break;
+
+		case 1:
+			mscanf("%s", path);
+			setLoadFilePath(path);
+			break;
+
+		case 2:
+			mscanf("%s", path);
+			setSaveFilePath(path);
+			break;
+
+		case 3:
+			printf("::\"%s\"\n", getLoadFilePath());
+			break;
+
+		case 4:
+			printf("::\"%s\"\n", getSaveFilePath());
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
+		}
+
+	}
+
+}
+
+
+
+int Keeper::loadAllAnimalsFromFile() 
+{
+	if (!isLoadFilePathSet())
+	{
+		printf("load file path is not set\n");
+		return -1;
+	}
+
+	FILE* fpin = fopen(getLoadFilePath(), "r");
+	if (fpin == NULL)
+		return - 1; // throw memory error
+
+	int num = 0;
+	if (fscanf(fpin, "%d\n", &num) != 1 || num < 0)
+	{
+		fclose(fpin);
+		return -1; // throw data corruption
+	}
+
+	int fieldNum = 0;
+	int type = 0;
+	int originalNumOfAnimals = numOfAnimals;
+
+	for (int i = 0; i < num; i++)
+	{
+		if (fscanf(fpin, "%d %d\n", &type, &fieldNum) != 2 || isInRange(type, 0, 4) || isInRange(fieldNum, 2, 5))
+		{
+			fclose(fpin);
+			return -1; // throw data corruption
+		};
+
+		// TRY OR THROW?
+		addAnimalOfType(type);
+
+		char fieldValue[511];
+		for (int n = 0; n < fieldNum; n++)
+		{
+			if (fscanf(fpin, "%s\n", fieldValue) != 1)
+				return -1; // THROW DATA COPPUPTION
+			setOneAnimalFeature(originalNumOfAnimals + i - 1, n, fieldValue);
+		}
+
+	}
+
+	fclose(fpin);
+	return 0;
 
 }; // loadFilePath
-void Keeper::saveAllAnimalsToFile() {}; // saveFilePath
+
+
+int Keeper::saveAllAnimalsToFile() {
+	return 0;
+}; // saveFilePath
 
 
 int Keeper::takeTypeToAdd()
@@ -72,9 +167,9 @@ int Keeper::takeTypeToAdd()
 }
 
 
-Animal* Keeper::createAnimalOfType(int _t)
+Animal* Keeper::createAnimalOfType(int _type)
 {
-	switch (_t)
+	switch (_type)
 	{
 	case 1:
 		return (Animal*) new Fish();
@@ -89,21 +184,26 @@ Animal* Keeper::createAnimalOfType(int _t)
 	return nullptr; // throw
 }
 
+void Keeper::addAnimalOfType(int _type)
+{
+	Animal* animalToAdd = createAnimalOfType(_type);
+	if (animalToAdd == nullptr)
+		throw - 1; // throw memory error
+
+	numOfAnimals++;
+	animals = (Animal**)realloc(animals, numOfAnimals);
+
+	if (animals == NULL)
+		throw - 1; // throw memory error
+
+	animals[numOfAnimals - 1] = animalToAdd;
+}
+
 void Keeper::addAnimal()
 {
 	int type = takeTypeToAdd();
 
-	Animal* animalToAdd = createAnimalOfType(type);
-	if (animalToAdd == nullptr)
-		throw -1;
-
-	numOfAnimals++;
-	animals = (Animal**)realloc(animals, numOfAnimals);
-	
-	if (animals == NULL)
-		throw -1;
-
-	animals[numOfAnimals - 1] = animalToAdd;
+	addAnimalOfType(type);
 }
 
 int Keeper::addAnimalMenu() {
@@ -112,6 +212,7 @@ int Keeper::addAnimalMenu() {
 
 	while (1)
 	{
+
 		printf("ADD ANIMAL MENU: ");
 		printf("\n-1 back to menu\n1 add animal\n2 add and set animal\n");
 			
@@ -120,21 +221,22 @@ int Keeper::addAnimalMenu() {
 		switch (take)
 		{
 		case -1:
+			system("cls");
 			return 0;
 
 		case 1:
 			addAnimal();
+			
 			break;
 
 		case 2:
 			addAnimal();
-			editAnimalMenu(numOfAnimals - 1);
+			editOneAnimalMenu(numOfAnimals - 1);
 			break;
 
 		default:
 			printf("unknown command\n");
 			break;
-
 		}
 	}
 
@@ -174,6 +276,7 @@ int Keeper::deleteAnimalMenu(int _id)
 		switch (take)
 		{
 		case -1:
+			system("cls");
 			return 0;
 
 		case 1:
@@ -192,15 +295,17 @@ int Keeper::deleteAnimalMenu(int _id)
 
 	}
 
-
-	return 0;
+	return -1; // throw
 };
 
-
+int Keeper::setOneAnimalFeature(int _id, int _n, char* _fieldValue)
+{
+	animals[_id]->setField(_fieldValue, _n);
+	return 0;
+}
 
 int Keeper::setOneAnimalFeature(int _id, int _n)
 {
-
 	char newVal[511] = { 0 };
 	printf("enter new value: ");
 
@@ -223,24 +328,26 @@ int Keeper::editOneAnimalField(int _id)
 	int n = -1;
 	printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureFieldsNum()-1);
 	scanInRange("%d", &n, 0, animals[_id]->getFeatureFieldsNum());
+
 	setOneAnimalFeature(_id, n);
 
 	return 0;
 }
 
 
-int Keeper::editAnimalMenu(int _id)
+int Keeper::editOneAnimalMenu(int _id)
 {
 	int take = 0;
 	while (1)
 	{
-		printf("EDIT MENU:\n");
+		printf("EDIT ONE ANIMAL MENU:\n");
 		printf("-1 exit\n1 edit one field\n2 edit all fields\n3 see field values\n");
 		mscanf("%d", &take);
 
 		switch (take)
 		{
 		case -1:
+			system("cls");
 			return 0;
 
 		case 1:
@@ -267,12 +374,49 @@ int Keeper::editAnimalMenu(int _id)
 	return 0;
 };
 
-int Keeper::editAnimal()
+int Keeper::editAnimalsMenu()
 {
-	int n = -1;
-	printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals-1);
-	scanInRange("%d", &n, 0, numOfAnimals-1);
-	editAnimalMenu(n);
+	int take = 0;
+	while (1)
+	{
+		printf("ADIT ANIMALS MENU:");
+		printf("-1 exit\n1 edit one field\n2 edit all fields\n3 see field values\n");
+		mscanf("%d", &take);
+
+		switch (take)
+		{
+		case -1:
+			system("cls");
+			return 0;
+
+		case 1:
+		{
+			int n = -1;
+			printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals - 1);
+			scanInRange("%d", &n, 0, numOfAnimals - 1);
+			editOneAnimalMenu(n);
+		}
+			break;
+
+
+		case 3:
+		{
+			int n = -1;
+			printf("enter id of animal to see (from 0 to %d):\n", numOfAnimals - 1);
+			scanInRange("%d", &n, 0, numOfAnimals - 1);
+			printOneAnimalToscreen(n);
+		}
+			
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
+
+		}
+	}
+
+	
 	return 0;
 }
 

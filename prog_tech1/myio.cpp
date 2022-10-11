@@ -1,14 +1,14 @@
 #include "myio.h"
 
-void mscanf(const char* _f, void* _x)
+int mscanf(const char* _f, void* _x)
 {
 	while (1)
 	{
 		printf("-> ");
 		if (scanf(_f, _x) != 1)
-			printf("intvalid input, try again\n");
+			printf("invalid input, try again\n");
 		else
-			break;
+			return 1;
 		if (getchar());
 	}
 }
@@ -25,4 +25,9 @@ void scanInRange(const char* _f, int* _x, int _min, int _max)
 			break;
 	}
 
+}
+
+int isInRange(int _val, int _min, int _max)
+{
+	return (_min < _val && _val < _max);
 }

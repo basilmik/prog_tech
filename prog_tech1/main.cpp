@@ -3,17 +3,19 @@
 
 #include "keeper.h"
 #include "myio.h"
+#include <stdlib.h>
+
 
 void seeCommandList()
 {
 	printf("MAIN MENU\n");
-	printf("commands:\n0 see command list\n-1  - exit\n");
+	printf("commands:\n100 - clear screen\n-1  - exit\n1 - file path's menu\n2 - save all animals to file\n3 - load all animals from file\n");
+	printf("4 - print animals to screen\n5 - add menu\n6 - edit menu\n7 - delete menu\n8 - print all to screen\n");
+	printf("101 - preset lofe path to load.txt and save.txt\n");
 }
 
 int menu()
 {
-	seeCommandList();
-
 	Keeper zoo;
 
 	int take = 0;
@@ -21,63 +23,64 @@ int menu()
 
 	while (1)
 	{
-		
+		system("cls");
+		seeCommandList();
 		mscanf("%d", &take);
 
 		switch (take)
 		{
-		case 0:
-			seeCommandList();
-			break;
 
 		case -1: // exit
 			return 0;
 
 		case 1:
-			// setFile save path
-			// would you like to set load and save the same?
+			zoo.setFilePathMenu();
 			break;
 
 		case 2:
-			// setFile load path
-			// would you like to set load and save the same?
-			break;
-
-		case 3:
 			// save to file
 			break;
 
-		case 4:
+		case 3:
+			zoo.loadAllAnimalsFromFile();
 			// load from file
 			break;
 
-		case 5:
+		case 4:
 			zoo.printAllAnimalsToScreen();
 			break;
 
-		case 6:// add new animal
+		case 5:// add new animal
 			zoo.addAnimalMenu();
 			break;
 
-		case 7:
-			zoo.editAnimal();
+		case 6:
+			zoo.editAnimalsMenu();
 			break;
 
-		case 8:
+		case 7:
 			// delete an animal
 			zoo.deleteAnimal();
 			break;
 
-		case 9:
+		case 8:
 			zoo.printAllAnimalsToScreen();
+			break;
+		
+		case 100:
+			system("cls");
+			break;
+
+		case 101:
+			zoo.presetPath();
 			break;
 
 		default:
 			printf("unknown command\n");
 			break;
 		}
-
-		printf("MAIN MENU\n");
+		
+		
 
 	}
 
