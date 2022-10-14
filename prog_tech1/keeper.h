@@ -6,23 +6,15 @@
 
 class Keeper
 {
-public:
+private:
 
-	Keeper();
-
-	~Keeper();
+	
 
 	Animal** animals;
 	int numOfAnimals;
 	
 
-	void presetPath()
-	{
-		setLoadFilePath((char*)"save_load.txt");
-		setSaveFilePath((char*)"save_load.txt");
-	}
-
-	int setFilePathMenu();
+	
 
 	char loadFilePath[512];
 	void setLoadFilePath(char* _path);
@@ -54,10 +46,9 @@ public:
 
 	void printOneAnimalToscreen(int _id);
 
-	void printAllAnimalsToScreen();
+
 
 	
-
 
 	int takeTypeToAdd();
 
@@ -69,19 +60,61 @@ public:
 
 	int addAnimalMenu();
 
-	int deleteAnimal();
-	int deleteOneAnimal(int _id);
-	int deleteAnimalMenu(int _id);
+	int deleteAnimal(int _id);
+	int deleteAnimalsMenu();
 
 	int editOneAnimalMenu(int _n);
 	int editAnimalsMenu();
-
-	int editOneAnimalField(int _id);
 
 	int setOneAnimalFeature(int _id, int _n);
 	int setOneAnimalFeature(int _id, int _n, char* _fieldValue);
 
 	int editAllAnimalFields(int _id);
+
+
+public:
+	Keeper();
+
+	~Keeper();
+
+	
+	int callSave()
+	{
+		if (numOfAnimals > 0)
+			return saveAllAnimalsToFile();
+	}
+
+	int callLoad()
+	{
+		return loadAllAnimalsFromFile();
+	}
+
+	int callAdd()
+	{
+		return addAnimalMenu();
+	}
+
+	int callEdit()
+	{
+		if (numOfAnimals > 0)
+		return editAnimalsMenu();
+	}
+
+	int callDelete()
+	{
+		if (numOfAnimals > 0)
+			return deleteAnimalsMenu();
+	}
+
+
+	void presetPath()
+	{
+		setLoadFilePath((char*)"save_load.txt");
+		setSaveFilePath((char*)"save_load2.txt");
+	}
+
+	int setFilePathMenu();
+	void printAllAnimalsToScreen();
 
 };
 

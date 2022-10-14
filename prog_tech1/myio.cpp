@@ -8,7 +8,10 @@ int mscanf(const char* _f, void* _x)
 		if (scanf(_f, _x) != 1)
 			printf("invalid input, try again\n");
 		else
+		{
+			if (getchar());
 			return 1;
+		}
 		if (getchar());
 	}
 }

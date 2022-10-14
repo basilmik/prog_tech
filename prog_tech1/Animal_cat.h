@@ -34,7 +34,7 @@ public:
 
 	void printFeaturesToScreen() override
 	{
-		printf("BIRD:\n");
+		printf("CAT:\n");
 		for (int i = 0; i < getFeatureFieldsNum(); i++)
 			printf("%s is: -%s-\n", getFeatureName(i), prop[i]);
 

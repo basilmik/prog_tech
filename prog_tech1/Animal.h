@@ -1,5 +1,6 @@
 #pragma once
 #include "stdio.h"
+#include "string.h"
 
 #define TYPE_FISH 1
 #define TYPE_BIRD 2

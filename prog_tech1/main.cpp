@@ -10,8 +10,8 @@ void seeCommandList()
 {
 	printf("MAIN MENU\n");
 	printf("commands:\n0 - see command list\n100 - clear screen\n-1  - exit\n1 - file path's menu\n2 - save all animals to file\n3 - load all animals from file\n");
-	printf("4 - print animals to screen\n5 - add menu\n6 - edit menu\n7 - delete menu\n8 - ----\n");
-	printf("101 - preset lofe path to load.txt and save.txt\n");
+	printf("4 - print animals to screen\n5 - call add menu\n6 - call edit menu\n7 - call delete menu\n8 - ----\n");
+	printf("101 - preset file path to load.txt and save.txt\n");
 }
 
 int menu()
@@ -37,15 +37,15 @@ int menu()
 			return 0;
 
 		case 1:
-			zoo.setFilePathMenu();
+			system("cls"); zoo.setFilePathMenu(); seeCommandList();
 			break;
 
 		case 2:
-			// save to file
+			zoo.callSave(); 
 			break;
 
 		case 3:
-			zoo.loadAllAnimalsFromFile();
+			zoo.callLoad(); 
 			// load from file
 			break;
 
@@ -54,21 +54,18 @@ int menu()
 			break;
 
 		case 5:// add new animal
-			zoo.addAnimalMenu();
+			system("cls"); zoo.callAdd(); seeCommandList();
 			break;
 
 		case 6:
-			zoo.editAnimalsMenu();
+			system("cls"); zoo.callEdit(); seeCommandList();
 			break;
 
 		case 7:
 			// delete an animal
-			zoo.deleteAnimal();
+			system("cls"); zoo.callDelete(); seeCommandList();
 			break;
 
-		case 8:
-			//zoo.printAllAnimalsToScreen();
-			break;
 		
 		case 100:
 			system("cls");
