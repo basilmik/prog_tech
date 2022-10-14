@@ -8,29 +8,29 @@ class Keeper
 {
 private:
 
-	
-
 	Animal** animals;
 	int numOfAnimals;
 	
 
-	
-
 	char loadFilePath[512];
 	void setLoadFilePath(char* _path);
+
 	char* getLoadFilePath()
 	{
 		return loadFilePath;
 	}
 
 	char saveFilePath[512];
+
 	void setSaveFilePath(char* _path);
+
 	char* getSaveFilePath()
 	{
 		return saveFilePath;
 	}
 	
 	int loadAllAnimalsFromFile(); // loadFilePath
+
 	int saveAllAnimalsToFile(); // saveFilePath
 
 
@@ -44,13 +44,9 @@ private:
 		return (strcmp(saveFilePath, "unknown") != 0);
 	}
 
+
 	void printOneAnimalToscreen(int _id);
 
-
-
-	
-
-	int takeTypeToAdd();
 
 	Animal* createAnimalOfType(int _type);
 
@@ -60,17 +56,20 @@ private:
 
 	int addAnimalMenu();
 
+
+
 	int deleteAnimal(int _id);
 	int deleteAnimalsMenu();
 
-	int editOneAnimalMenu(int _n);
-	int editAnimalsMenu();
 
-	int setOneAnimalFeature(int _id, int _n);
-	int setOneAnimalFeature(int _id, int _n, char* _fieldValue);
+	int setOneFeature(int _id, int _n);
+	int setOneFeature(int _id, int _n, char* _fieldValue);
+	int setEachField(int _id);
 
-	int editAllAnimalFields(int _id);
+	int editOneMenu(int _n);
+	int editMenu();
 
+	
 
 public:
 	Keeper();
@@ -97,7 +96,7 @@ public:
 	int callEdit()
 	{
 		if (numOfAnimals > 0)
-		return editAnimalsMenu();
+		return editMenu();
 	}
 
 	int callDelete()
