@@ -37,7 +37,7 @@ int menu()
 			return 0;
 
 		case 1:
-			system("cls"); zoo.setFilePathMenu(); seeCommandList();
+			system("cls"); zoo.callFileMenu(); seeCommandList();
 			break;
 
 		case 2:
@@ -50,7 +50,7 @@ int menu()
 			break;
 
 		case 4:
-			zoo.printAllAnimalsToScreen();
+			zoo.printAll();
 			break;
 
 		case 5:// add new animal

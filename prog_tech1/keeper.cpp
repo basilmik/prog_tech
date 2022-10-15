@@ -1,11 +1,15 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "keeper.h"
+#include "myio.h"
+#include "Exeption.h"
 
 #include "malloc.h"
-#include "myio.h"
+
 #include "string.h" 
 #include <stdlib.h>
 #include "stdio.h"
+
+Exeption* e = new Exeption("keeper.cpp");
 
 Keeper::Keeper() 
 {
@@ -14,30 +18,24 @@ Keeper::Keeper()
 
 	strcpy(loadFilePath, "unknown");
 	strcpy(saveFilePath, "unknown");
-
 };
 
 Keeper::~Keeper() 
 {
 	for (int i = 0; i < numOfAnimals; i++)
-	{
 		delete animals[i];
-	}
-
 };
 
-void Keeper::printOneAnimalToscreen(int _id) 
+void Keeper::print(int _id) 
 {
-	animals[_id]->printFeaturesToScreen();
+	animals[_id]->printFeatures();
+	printf("\n");
 };
 
-void Keeper::printAllAnimalsToScreen()
+void Keeper::printAll()
 {
 	for (int i = 0; i < numOfAnimals; i++)
-	{
-		printOneAnimalToscreen(i);
-		printf("\n");
-	}
+		print(i);
 };
 
 
@@ -52,11 +50,13 @@ void Keeper::setSaveFilePath(char* _path)
 };
 
 
+
+
 int Keeper::setFilePathMenu()
 {
 	int take = 0;
-	printf("SET FILE PATH MENU:\n");
-	printf("-1 exit\n1 set LOAD file path\n2 set SAVE file path\n0 set BOTH THE SAME\n3 see LOAD path\n4 see SAVE path\n");
+	printf("SET FILE PATH MENU:");
+	printf("\n-1 exit\n1 set LOAD file path\n2 set SAVE file path\n0 set BOTH THE SAME\n3 see LOAD path\n4 see SAVE path\n");
 
 	char path[511] = { '\0' };
 
@@ -68,6 +68,7 @@ int Keeper::setFilePathMenu()
 		case -1:
 			system("cls");
 			return 0;
+
 		case 0:
 			mscanf("%s", path);
 			setLoadFilePath(path);
@@ -99,6 +100,7 @@ int Keeper::setFilePathMenu()
 
 	}
 
+	throw e->set("menu call error", __LINE__);
 }
 
 
@@ -113,40 +115,52 @@ int Keeper::loadAllAnimalsFromFile()
 
 	FILE* fpin = fopen(getLoadFilePath(), "r");
 	if (fpin == NULL)
-		return - 1; // throw memory error
+	{
+		printf("could not open file\n");
+		return -1;
+	}
 
 	int num = 0;
-	if (fscanf(fpin, "%d\n", &num) != 1 || num < 0)
+	if (fscanf(fpin, "!%d\n", &num) != 1 || num < 0)
 	{
 		fclose(fpin);
-		return -1; // throw data corruption
+		
+		throw e->set("data corruption error", __LINE__);
 	}
 
 	int fieldNum = 0;
 	int type = 0;
 	int originalNumOfAnimals = numOfAnimals;
 
-	for (int i = 1; i <= num; i++)
+	for (int i = 0; i < num; i++)
 	{
-		if (fscanf(fpin, "%d %d\n", &type, &fieldNum) != 2 || !isInRange(type, 0, 4) || !isInRange(fieldNum, 2, 5))
+		if (fscanf(fpin, "%d-%d-\n", &type, &fieldNum) != 2 || !isInRange(type, 0, 4) || !isInRange(fieldNum, 2, 5))
 		{
 			fclose(fpin);
-			return -1; // throw data corruption
+			throw e->set("data corruption error", __LINE__);
 		};
 
-		// TRY OR THROW?
-		addAnimalOfType(type);
+		
+		addAnimal(type);
 
 		char fieldValue[511];
 		for (int n = 0; n < fieldNum; n++)
 		{
+
 			if (fgets(fieldValue, 510, fpin) == NULL)
-				return -1; // THROW DATA COPPUPTION
+				throw e->set("data corruption error", __LINE__);
 
 			int len = strlen(fieldValue);
+
+			if(len < 3)
+				throw e->set("data corruption error", __LINE__);
+
+			if (fieldValue[0] != ':' && fieldValue[1]!=':')
+				throw e->set("data corruption error", __LINE__);
+
 			fieldValue[len - 1] = '\0';
 			
-			setOneFeature(originalNumOfAnimals + i - 1, n, fieldValue);
+			setOneFeature(originalNumOfAnimals + i, n, fieldValue);
 		}
 	}
 
@@ -154,6 +168,7 @@ int Keeper::loadAllAnimalsFromFile()
 	return 0;
 
 };
+
 
 int Keeper::saveAllAnimalsToFile() 
 {
@@ -163,27 +178,28 @@ int Keeper::saveAllAnimalsToFile()
 		return -1;
 	}
 
-
 	FILE* fpout = fopen(getSaveFilePath(), "w");
 	if (fpout == NULL)
-		return -1; // throw memory error
+	{
+		printf("could not open file\n");
+		return -1;
+	}
 
-	fprintf(fpout, "%d\n", numOfAnimals);
+	fprintf(fpout, "!%d\n", numOfAnimals);
 
 	for (int i = 0; i < numOfAnimals; i++)
 	{
 		int type = animals[i]->getAnimalType();
-		int fieldNum = animals[i]->getFeatureFieldsNum();
-		fprintf(fpout, "%d %d\n", type, fieldNum);
+		int fieldNum = animals[i]->getFeatureNum();
+
+		fprintf(fpout, "%d-%d-\n", type, fieldNum);
+
 		for (int j = 0; j < fieldNum; j++)
-		{
-			fprintf(fpout, "%s\n", animals[i]->prop[j]);
-		}
+			fprintf(fpout, "::%s\n", animals[i]->features[j]);
+		
 	}
 
-	
 	fclose(fpout);
-
 	return 0;
 };
 
@@ -203,31 +219,41 @@ Animal* Keeper::createAnimalOfType(int _type)
 		return (Animal*) new Cat();
 	}
 
-	return nullptr; // throw
+	throw e->set("type to create error", __LINE__);
 }
 
-void Keeper::addAnimalOfType(int _type)
+void Keeper::addAnimal(int type = 0)
 {
-	Animal* animalToAdd = createAnimalOfType(_type);
-	if (animalToAdd == nullptr)
-		throw - 1; // throw memory error
+	if (type == 0)
+	type = askTypeToCreate();
+	Animal* animalToAdd;
 
+	try {
+		animalToAdd = createAnimalOfType(type);
+	}
+	catch (Exeption _e)
+	{
+		throw _e;
+	}
+
+	if (animalToAdd == nullptr)
+		throw e->set("memory error", __LINE__);
 	
 	if (animals == NULL && numOfAnimals != 0)
 	{
-		printf("animals is nullptr\n");
-		throw - 1; // throw memory error
+		throw e->set("memory error", __LINE__);
 	}
 	
 	numOfAnimals++;
+
 	Animal** animals_new = (Animal**)calloc(numOfAnimals, sizeof(Animal*));
 	
 	if (animals_new == NULL)
 	{
-		printf("animals_new is nullptr\n");
-		throw - 1; // throw memory error
+		throw e->set("memory error", __LINE__);
 	}
 	
+
 	for (int i = 0; i < numOfAnimals-1; i++)
 	{
 		animals_new[i] = new Animal;
@@ -241,19 +267,19 @@ void Keeper::addAnimalOfType(int _type)
 }
 
 
-void Keeper::addAnimal()
+int Keeper::askTypeToCreate()
 {
-
 	int typeInputed = 0;
 
 	printf("TYPE_FISH 1\nTYPE_BIRD 2\nTYPE_CAT 3\n");
 	printf("enter type of animal you would like to create:\n");
 
 	scanInRange("%d", &typeInputed, 1, 3);
-	addAnimalOfType(typeInputed);
+	return typeInputed;
 }
 
-int Keeper::addAnimalMenu() {
+
+int Keeper::addMenu() {
 
 	int take = 0;
 
@@ -271,11 +297,24 @@ int Keeper::addAnimalMenu() {
 			return 0;
 
 		case 1:
-			addAnimal();
+			try {
+				addAnimal();
+			}
+			catch (Exeption _e)
+			{
+				throw _e;
+			}
+			
 			break;
 
 		case 2:
-			addAnimal();
+			try {
+				addAnimal();
+			}
+			catch (Exeption _e)
+			{
+				throw _e;
+			}
 			system("cls");
 			editOneMenu(numOfAnimals - 1);
 			break;
@@ -286,24 +325,25 @@ int Keeper::addAnimalMenu() {
 		}
 	}
 
-	return -1; // throw
+	throw e->set("menu call error", __LINE__);
 };
 
 
 
 
-
-
-int Keeper::deleteAnimal(int _id) 
+int Keeper::deleteOne(int _id) 
 {
 	delete animals[_id];
+
 	for (int i = _id; i < numOfAnimals - 1; i++)
 		animals[i] = animals[i + 1];
+
 	numOfAnimals--;
+
 	return 0;
 };
 
-int Keeper::deleteAnimalsMenu() 
+int Keeper::deleteMenu() 
 {
 	int take = 0;
 	while (1)
@@ -323,7 +363,7 @@ int Keeper::deleteAnimalsMenu()
 			int id = -1;
 			printf("enter id of animal to delete (from 0 to %d):\n", numOfAnimals - 1);
 			scanInRange("%d", &id, 0, numOfAnimals - 1);
-			deleteAnimal(id);
+			deleteOne(id);
 		}
 			break;
 
@@ -332,53 +372,48 @@ int Keeper::deleteAnimalsMenu()
 			int id = -1;
 			printf("enter id of animal to see (from 0 to %d):\n", numOfAnimals - 1);
 			scanInRange("%d", &id, 0, numOfAnimals - 1);
-			printOneAnimalToscreen(id);
+			print(id);
 		}
 			break;
 
 		default:
 			printf("unknown command\n");
 			break;
-
 		}
-
 	}
 
-	return -1; // throw
+	throw e->set("menu call error", __LINE__);
 };
 
 
 
 
-int Keeper::setOneFeature(int _id, int _n, char* _fieldValue)
+void Keeper::setOneFeature(int _id, int _n, char* _fieldValue)
 {
-	animals[_id]->setField(_fieldValue, _n);
-	return 0;
+	animals[_id]->setFeature(_fieldValue, _n);
 }
 
-int Keeper::setOneFeature(int _id, int _n)
+void Keeper::setOneFeature(int _id, int _n)
 {
 	char newVal[511] = { 0 };
 	printf("enter new %s:\n->", animals[_id]->getFeatureName(_n));
 	gets_s(newVal);
 
 	setOneFeature(_id, _n, newVal);
-
-	return 0;
 }
 
-int Keeper::setEachField(int _id)
+void Keeper::setEachFeature(int _id)
 {
-	for (int n = 0; n < animals[_id]->getFeatureFieldsNum(); n++)
+	for (int n = 0; n < animals[_id]->getFeatureNum(); n++)
 		setOneFeature(_id, n);
-
-	return 0;
 }
+
 
 int Keeper::editOneMenu(int _id)
 {
 	int take = 0;
 	system("cls");
+
 	while (1)
 	{
 		printf("EDIT ONE ANIMAL MENU:");
@@ -394,30 +429,27 @@ int Keeper::editOneMenu(int _id)
 		case 1:
 		{
 			int n = -1;
-			printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureFieldsNum() - 1);
-			scanInRange("%d", &n, 0, animals[_id]->getFeatureFieldsNum());
+			printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureNum() - 1);
+			scanInRange("%d", &n, 0, animals[_id]->getFeatureNum());
 			setOneFeature(_id, n);
-		}
-			
+		}			
 			break;
 
 		case 2:
-			setEachField(_id);
+			setEachFeature(_id);
 			break;
 
 		case 3:
-			printOneAnimalToscreen(_id);
+			print(_id);
 			break;
 
 		default:
 			printf("unknown command\n");
 			break;
-
 		}
-
 	}
 
-	return 0;
+	throw e->set("menu call error", __LINE__);
 };
 
 int Keeper::editMenu()
@@ -440,7 +472,14 @@ int Keeper::editMenu()
 			int id = -1;
 			printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals - 1);
 			scanInRange("%d", &id, 0, numOfAnimals - 1);
-			editOneMenu(id);
+
+			try {
+				editOneMenu(id);
+			}
+			catch (Exeption _e)
+			{
+				throw _e;
+			}
 		}
 			break;
 
@@ -450,7 +489,7 @@ int Keeper::editMenu()
 			int n = -1;
 			printf("enter id of animal to see (from 0 to %d):\n", numOfAnimals - 1);
 			scanInRange("%d", &n, 0, numOfAnimals - 1);
-			printOneAnimalToscreen(n);
+			print(n);
 		}
 			
 			break;
@@ -463,7 +502,7 @@ int Keeper::editMenu()
 	}
 
 	
-	return 0;
+	throw e->set("menu call error", __LINE__);
 }
 
 

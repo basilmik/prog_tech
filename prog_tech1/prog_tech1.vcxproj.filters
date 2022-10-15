@@ -36,6 +36,9 @@
     <ClCompile Include="Animal_bird.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Exeption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animal.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="myio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exeption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,65 +11,57 @@ private:
 	Animal** animals;
 	int numOfAnimals;
 	
-
 	char loadFilePath[512];
-	void setLoadFilePath(char* _path);
+	char saveFilePath[512];
 
+	
+	void setLoadFilePath(char* _path);
 	char* getLoadFilePath()
 	{
 		return loadFilePath;
 	}
-
-	char saveFilePath[512];
-
-	void setSaveFilePath(char* _path);
-
-	char* getSaveFilePath()
-	{
-		return saveFilePath;
-	}
-	
-	int loadAllAnimalsFromFile(); // loadFilePath
-
-	int saveAllAnimalsToFile(); // saveFilePath
-
-
 	int isLoadFilePathSet()
 	{
 		return (strcmp(loadFilePath, "unknown") != 0);
 	}
+	
 
+	void setSaveFilePath(char* _path);
+	char* getSaveFilePath()
+	{
+		return saveFilePath;
+	}
 	int isSaveFilePathSet()
 	{
 		return (strcmp(saveFilePath, "unknown") != 0);
 	}
+	
 
+	int setFilePathMenu();
 
-	void printOneAnimalToscreen(int _id);
+	int loadAllAnimalsFromFile();
+	int saveAllAnimalsToFile();
 
+	void print(int _id);
 
 	Animal* createAnimalOfType(int _type);
+	int askTypeToCreate();
 
-	void addAnimalOfType(int _type);
-
-	void addAnimal();
-
-	int addAnimalMenu();
+	void addAnimal(int type);
+	int addMenu();
 
 
+	int deleteOne(int _id);
+	int deleteMenu();
 
-	int deleteAnimal(int _id);
-	int deleteAnimalsMenu();
 
-
-	int setOneFeature(int _id, int _n);
-	int setOneFeature(int _id, int _n, char* _fieldValue);
-	int setEachField(int _id);
+	void setOneFeature(int _id, int _n);
+	void setOneFeature(int _id, int _n, char* _fieldValue);
+	void setEachFeature(int _id);
 
 	int editOneMenu(int _n);
 	int editMenu();
 
-	
 
 public:
 	Keeper();
@@ -77,34 +69,85 @@ public:
 	~Keeper();
 
 	
-	int callSave()
+	void callSave()
 	{
 		if (numOfAnimals > 0)
-			return saveAllAnimalsToFile();
+			saveAllAnimalsToFile();
+		printf("no elements added yet\n");
 	}
 
-	int callLoad()
+	void callLoad()
 	{
-		return loadAllAnimalsFromFile();
+		try {
+			loadAllAnimalsFromFile();
+		}
+		catch (Exeption* _e)
+		{
+			_e->show();
+		}
+		catch (int i)
+		{
+			printf("caught %d\n", i);
+		}
+		
 	}
 
-	int callAdd()
+	void callAdd()
 	{
-		return addAnimalMenu();
+		try
+		{
+			addMenu();
+		}
+		catch (Exeption _e)
+		{
+			_e.show();
+		}
 	}
 
-	int callEdit()
+	void callEdit()
 	{
 		if (numOfAnimals > 0)
-		return editMenu();
+		{
+			try
+			{
+				editMenu();
+			}
+			catch (Exeption _e)
+			{
+				_e.show();
+			}
+		}
+		else
+			printf("no elements added yet\n");
 	}
 
-	int callDelete()
+	void callDelete()
 	{
 		if (numOfAnimals > 0)
-			return deleteAnimalsMenu();
+		{
+			try
+			{
+				deleteMenu();
+			}
+			catch (Exeption _e)
+			{
+				_e.show();
+			}
+		}
+		printf("no elements added yet\n");
 	}
 
+	void callFileMenu()
+	{
+		try 
+		{
+			setFilePathMenu();
+		}
+		catch (Exeption _e)
+		{
+			_e.show();
+		}
+	}
 
 	void presetPath()
 	{
@@ -112,8 +155,8 @@ public:
 		setSaveFilePath((char*)"save_load2.txt");
 	}
 
-	int setFilePathMenu();
-	void printAllAnimalsToScreen();
+	
+	void printAll();
 
 };
 

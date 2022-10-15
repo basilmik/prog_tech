@@ -7,27 +7,28 @@
 #define COLOR 1
 #define DIET 2
 
+Exeption* ef = new Exeption("Animal_fish.cpp");
 
-Fish::Fish() {
+Fish::Fish() 
+{
+
 	setAnimalType(TYPE_FISH);
 	int fieldNum = 3;
-	setFeatureFieldsNum(fieldNum);
+	setFeatureNum(fieldNum);
 
-	prop = (char**)malloc(fieldNum * sizeof(char*));
-	if (prop == nullptr)
-		throw 0; // EXEPTION
+	features = (char**)malloc(fieldNum * sizeof(char*));
+	if (features == nullptr)
+		throw ef->set("memory error", __LINE__);
 
 	for (int i = 0; i < fieldNum; i++)
 	{
-		prop[i] = (char*)calloc(512, sizeof(char));
-		if (prop[i] == NULL)
-			throw - 1; // throw memory exeption
-		strcpy(prop[i], "n/s");
+		features[i] = (char*)calloc(512, sizeof(char));
+		if (features[i] == NULL)
+			throw ef->set("memory error", __LINE__);
+
+		strcpy(features[i], "n/s");
 	}
 };
 
 
 Fish::~Fish() {};
-
-
-

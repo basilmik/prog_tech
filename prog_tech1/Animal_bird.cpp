@@ -2,21 +2,25 @@
 #include "Animal_bird.h"
 #include "malloc.h"
 
+Exeption* eb = new Exeption("Animal_bird.h");
+
 Bird::Bird() {
 	setAnimalType(TYPE_BIRD);
-	int fieldNum = 4;
-	setFeatureFieldsNum(fieldNum);
 
-	prop = (char**)malloc(fieldNum * sizeof(char*));
-	if (prop == nullptr)
-		throw 0; // EXEPTION
+	int fieldNum = 4;
+	setFeatureNum(fieldNum);
+
+	features = (char**)malloc(fieldNum * sizeof(char*));
+	if (features == nullptr)
+		throw eb->set("memory error", __LINE__);
 
 	for (int i = 0; i < fieldNum; i++)
 	{
-		prop[i] = (char*)calloc(512, sizeof(char));
-		if (prop[i] == NULL)
-			throw - 1; // throw memory exeption
-		strcpy(prop[i], "n/s");
+		features[i] = (char*)calloc(512, sizeof(char));
+		if (features[i] == NULL)
+			throw eb->set("memory error", __LINE__);
+
+		strcpy(features[i], "n/s");
 	}
 };
 

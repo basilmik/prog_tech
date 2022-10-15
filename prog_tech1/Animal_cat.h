@@ -32,11 +32,11 @@ public:
 		}
 	};
 
-	void printFeaturesToScreen() override
+	void printFeatures() override
 	{
 		printf("CAT:\n");
-		for (int i = 0; i < getFeatureFieldsNum(); i++)
-			printf("%s is: -%s-\n", getFeatureName(i), prop[i]);
+		for (int i = 0; i < getFeatureNum(); i++)
+			printf("%s is: -%s-\n", getFeatureName(i), features[i]);
 
 	};
 

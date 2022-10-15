@@ -9,8 +9,8 @@
 Animal::Animal()
 {
 	animalType = 0;
-	featureFieldsNum = 0;
-	prop = nullptr;
+	featureNum = 0;
+	features = nullptr;
 
 };
 
@@ -20,8 +20,8 @@ Animal::~Animal() {};
 
 char* Animal::operator[](int _n)
 {
-	if (_n >= 0 && _n < getFeatureFieldsNum())
-		return prop[_n];
+	if (_n >= 0 && _n < getFeatureNum())
+		return features[_n];
 	else
 		return nullptr;
 }
@@ -33,9 +33,9 @@ void Animal::setAnimalType(int _animalType)
 	animalType = _animalType;
 }
 
-void Animal::setFeatureFieldsNum(int _featureFieldsNum)
+void Animal::setFeatureNum(int _featureNum)
 {
-	featureFieldsNum = _featureFieldsNum;
+	featureNum = _featureNum;
 }
 
 int Animal::getAnimalType()
@@ -43,15 +43,15 @@ int Animal::getAnimalType()
 	return animalType;
 }
 
-int Animal::getFeatureFieldsNum()
+int Animal::getFeatureNum()
 {
-	return featureFieldsNum;
+	return featureNum;
 }
 
 	
-void Animal::setField(char* _val, int _n)
+void Animal::setFeature(char* _val, int _n)
 {
-	strcpy(prop[_n], _val);
+	strcpy(features[_n], _val);
 }
 
 // EOF
