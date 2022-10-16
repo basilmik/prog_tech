@@ -13,6 +13,7 @@ Exeption* e = new Exeption("keeper.cpp");
 
 Keeper::Keeper() 
 {
+	printf("keeper constructor called\n");
 	animals = nullptr;
 	numOfAnimals = 0;
 
@@ -22,6 +23,7 @@ Keeper::Keeper()
 
 Keeper::~Keeper() 
 {
+	printf("keeper destructor called\n");
 	for (int i = 0; i < numOfAnimals; i++)
 		delete animals[i];
 };
@@ -131,6 +133,7 @@ int Keeper::loadAllAnimalsFromFile()
 	int fieldNum = 0;
 	int type = 0;
 	int originalNumOfAnimals = numOfAnimals;
+	char fieldValue[511] = {0};
 
 	for (int i = 0; i < num; i++)
 	{
@@ -140,28 +143,39 @@ int Keeper::loadAllAnimalsFromFile()
 			throw e->set("data corruption error", __LINE__);
 		};
 
-		
 		addAnimal(type);
 
-		char fieldValue[511];
 		for (int n = 0; n < fieldNum; n++)
 		{
-
 			if (fgets(fieldValue, 510, fpin) == NULL)
+			{
+				fclose(fpin);
 				throw e->set("data corruption error", __LINE__);
-
+			}
 			int len = strlen(fieldValue);
 
-			if(len < 3)
+			if (len < 2)
+			{
+				fclose(fpin);
 				throw e->set("data corruption error", __LINE__);
+			}
 
-			if (fieldValue[0] != ':' && fieldValue[1]!=':')
-				throw e->set("data corruption error", __LINE__);
-
-			fieldValue[len - 1] = '\0';
-			
-			setOneFeature(originalNumOfAnimals + i, n, fieldValue);
+			if (len == 2 && fieldValue[0] == '-')
+				setOneFeature(originalNumOfAnimals + i, n, (char*)"n/s\0");
+			else
+			{
+				fieldValue[len - 1] = '\0';
+				setOneFeature(originalNumOfAnimals + i, n, fieldValue);
+			}
 		}
+
+	}
+
+	fscanf(fpin, "%s", fieldValue);
+	if (strcmp(fieldValue, "EOF") != 0)
+	{
+		fclose(fpin);
+		throw e->set("data corruption error, possible loss of data", __LINE__);
 	}
 
 	fclose(fpin);
@@ -224,10 +238,10 @@ Animal* Keeper::createAnimalOfType(int _type)
 
 void Keeper::addAnimal(int type = 0)
 {
+	Animal* animalToAdd;
 	if (type == 0)
 	type = askTypeToCreate();
-	Animal* animalToAdd;
-
+	
 	try {
 		animalToAdd = createAnimalOfType(type);
 	}
@@ -264,7 +278,100 @@ void Keeper::addAnimal(int type = 0)
 
 	animals = animals_new;
 	animals[numOfAnimals - 1] = animalToAdd;
+
 }
+
+
+void Keeper::copyAdd(Animal & _obj)
+{
+	//Animal* animalToAdd = new T(_obj);
+
+	Animal* animalToAdd = nullptr;
+
+	switch (_obj.getAnimalType())
+	{
+	case TYPE_FISH:
+		animalToAdd = new Fish((Fish&)_obj);
+		break;
+	case TYPE_CAT:
+		animalToAdd = new Fish((Fish&)_obj);
+		break;
+	case TYPE_BIRD:
+		animalToAdd = new Fish((Fish&)_obj);
+		break;
+	}
+	
+	
+	if (animalToAdd == nullptr)
+		throw e->set("memory error", __LINE__);
+
+	if (animals == NULL && numOfAnimals != 0)
+	{
+		throw e->set("memory error", __LINE__);
+	}
+
+	numOfAnimals++;
+
+	Animal** animals_new = (Animal**)calloc(numOfAnimals, sizeof(Animal*));
+
+	if (animals_new == NULL)
+	{
+		throw e->set("memory error", __LINE__);
+	}
+
+
+	for (int i = 0; i < numOfAnimals - 1; i++)
+	{
+		animals_new[i] = new Animal;
+		animals_new[i] = animals[i];
+	}
+
+	free (animals);
+	
+	animals = animals_new;
+	animals[numOfAnimals - 1] = animalToAdd;
+}
+
+int Keeper::copyMenu()
+{
+	int take = 0;
+
+	while (1)
+	{
+		printf("COPY ANIMAL MENU:");
+		printf("\n-1 back to menu\n1 enter num to copy\n2 see all\n");
+
+		mscanf("%d", &take);
+
+		switch (take)
+		{
+		case -1:
+			system("cls");
+			return 0;
+
+		case 1:
+		{
+			int id = -1;
+			printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals - 1);
+			scanInRange("%d", &id, 0, numOfAnimals - 1);
+
+			copyAdd(*animals[id]);
+		}
+			break;
+
+		case 2:
+			printAll();
+			break;
+
+		default:
+			printf("unknown command\n");
+			break;
+		}
+	}
+
+	throw e->set("menu call error", __LINE__);
+}
+
 
 
 int Keeper::askTypeToCreate()
@@ -315,6 +422,7 @@ int Keeper::addMenu() {
 			{
 				throw _e;
 			}
+			system("pause");
 			system("cls");
 			editOneMenu(numOfAnimals - 1);
 			break;
@@ -423,6 +531,7 @@ int Keeper::editOneMenu(int _id)
 		switch (take)
 		{
 		case -1:
+			system("pause");
 			system("cls");
 			return 0;
 

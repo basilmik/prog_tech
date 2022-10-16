@@ -14,9 +14,10 @@ void seeCommandList()
 	printf("101 - preset file path to load.txt and save.txt\n");
 }
 
+	Keeper zoo;
 int menu()
 {
-	Keeper zoo;
+
 
 	int take = 0;
 	int n = -1;
@@ -34,6 +35,7 @@ int menu()
 			break;
 
 		case -1: // exit
+			
 			return 0;
 
 		case 1:
@@ -65,10 +67,12 @@ int menu()
 			// delete an animal
 			system("cls"); zoo.callDelete(); seeCommandList();
 			break;
-
+		case 8:
+			system("cls"); zoo.callCopy(); seeCommandList();
+			break;
 		
 		case 100:
-			system("cls");
+			system("cls"); seeCommandList();
 			break;
 
 		case 101:
@@ -93,6 +97,7 @@ int main()
 {
 
 	menu();
+	//delete zoo;
 
 
 	return 0;

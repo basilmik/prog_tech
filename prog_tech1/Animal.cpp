@@ -8,13 +8,18 @@
 
 Animal::Animal()
 {
+	printf("animal constructor called\n");
 	animalType = 0;
 	featureNum = 0;
 	features = nullptr;
 
 };
 
-Animal::~Animal() {};
+Animal::~Animal() 
+{ 
+	printf("animal destructor called\n"); 
+	delete[] features;
+};
 
 
 

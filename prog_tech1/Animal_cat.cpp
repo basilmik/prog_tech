@@ -7,6 +7,8 @@ Exeption* ec = new Exeption("Animal_cat.cpp");
 
 Cat::Cat() 
 {
+	printf("cat constructor called\n");
+
 	setAnimalType(TYPE_CAT);
 
 	int fieldNum = 4;
@@ -26,4 +28,4 @@ Cat::Cat()
 	}
 };
 
-Cat::~Cat() {};
+Cat::~Cat() { printf("cat destructor called\n"); };

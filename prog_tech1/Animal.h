@@ -22,6 +22,8 @@ public:
 
 	~Animal();
 
+
+
 	char* operator[](int _n);
 
 

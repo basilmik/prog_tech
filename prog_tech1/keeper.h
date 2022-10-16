@@ -20,6 +20,7 @@ private:
 	{
 		return loadFilePath;
 	}
+
 	int isLoadFilePathSet()
 	{
 		return (strcmp(loadFilePath, "unknown") != 0);
@@ -63,6 +64,10 @@ private:
 	int editMenu();
 
 
+	void copyAdd(Animal& _obj);
+
+	int copyMenu();
+
 public:
 	Keeper();
 
@@ -73,7 +78,8 @@ public:
 	{
 		if (numOfAnimals > 0)
 			saveAllAnimalsToFile();
-		printf("no elements added yet\n");
+		else
+			printf("no elements added yet\n");
 	}
 
 	void callLoad()
@@ -157,6 +163,12 @@ public:
 
 	
 	void printAll();
+
+
+	void callCopy()
+	{
+		copyMenu();
+	}
 
 };
 

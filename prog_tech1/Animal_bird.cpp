@@ -5,6 +5,9 @@
 Exeption* eb = new Exeption("Animal_bird.h");
 
 Bird::Bird() {
+
+	printf("bird constructor called\n");
+
 	setAnimalType(TYPE_BIRD);
 
 	int fieldNum = 4;
@@ -24,4 +27,4 @@ Bird::Bird() {
 	}
 };
 
-Bird::~Bird() {};
+Bird::~Bird() { printf("bird destructor called\n"); };

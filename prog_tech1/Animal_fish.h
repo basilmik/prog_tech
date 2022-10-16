@@ -7,12 +7,19 @@
 
 class Fish : public Animal
 {
+private:
+	void defaultFieldSet(bool _to_copy, Fish & _obj);
 
 public:
 
 	Fish();
 	
 	~Fish();
+
+	Fish(Fish & _obj)
+	{	
+		defaultFieldSet(true, _obj);	
+	}
 
 	char* getFeatureName(int _n) override
 	{

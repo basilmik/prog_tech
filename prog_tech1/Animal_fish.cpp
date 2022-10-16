@@ -9,9 +9,10 @@
 
 Exeption* ef = new Exeption("Animal_fish.cpp");
 
-Fish::Fish() 
-{
 
+void Fish::defaultFieldSet(bool _to_copy, Fish & _obj = *((Fish*)nullptr))
+{
+	
 	setAnimalType(TYPE_FISH);
 	int fieldNum = 3;
 	setFeatureNum(fieldNum);
@@ -26,9 +27,22 @@ Fish::Fish()
 		if (features[i] == NULL)
 			throw ef->set("memory error", __LINE__);
 
-		strcpy(features[i], "n/s");
+		if (_to_copy == true)
+			strcpy(features[i], _obj.features[i]);
+		else
+			strcpy(features[i], "n/s");
 	}
+}
+
+Fish::Fish() 
+{
+	printf("fish constructor called\n");
+
+	defaultFieldSet(false);
+
 };
 
 
-Fish::~Fish() {};
+Fish::~Fish() { 
+	printf("fish destructor called\n"); 
+};
