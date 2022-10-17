@@ -12,7 +12,6 @@ Exeption* ef = new Exeption("Animal_fish.cpp");
 
 void Fish::defaultFieldSet(bool _to_copy, Fish & _obj = *((Fish*)nullptr))
 {
-	
 	setAnimalType(TYPE_FISH);
 	int fieldNum = 3;
 	setFeatureNum(fieldNum);
@@ -39,7 +38,6 @@ Fish::Fish()
 	printf("fish constructor called\n");
 
 	defaultFieldSet(false);
-
 };
 
 

@@ -10,11 +10,11 @@ void seeCommandList()
 {
 	printf("MAIN MENU\n");
 	printf("commands:\n0 - see command list\n100 - clear screen\n-1  - exit\n1 - file path's menu\n2 - save all animals to file\n3 - load all animals from file\n");
-	printf("4 - print animals to screen\n5 - call add menu\n6 - call edit menu\n7 - call delete menu\n8 - ----\n");
+	printf("4 - print animals to screen\n5 - call add menu\n6 - call edit menu\n7 - call delete menu\n8 - call copy menu\n");
 	printf("101 - preset file path to load.txt and save.txt\n");
 }
 
-	Keeper zoo;
+Keeper zoo;
 int menu()
 {
 
@@ -35,7 +35,6 @@ int menu()
 			break;
 
 		case -1: // exit
-			
 			return 0;
 
 		case 1:
@@ -83,24 +82,16 @@ int menu()
 			printf("unknown command\n");
 			break;
 		}
-		
-		
-
 	}
 
-
-	return 0;
+	return -1;
 }
 
 
 int main()
 {
-
-	menu();
-	//delete zoo;
-
-
-	return 0;
+	
+	return menu();
 }
 
 // EOF

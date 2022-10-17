@@ -4,10 +4,8 @@
 
 Exeption* eb = new Exeption("Animal_bird.h");
 
-Bird::Bird() {
-
-	printf("bird constructor called\n");
-
+void Bird::defaultFieldSet(bool _to_copy, Bird& _obj = *((Bird*)nullptr))
+{
 	setAnimalType(TYPE_BIRD);
 
 	int fieldNum = 4;
@@ -23,8 +21,18 @@ Bird::Bird() {
 		if (features[i] == NULL)
 			throw eb->set("memory error", __LINE__);
 
-		strcpy(features[i], "n/s");
+		if (_to_copy == true)
+			strcpy(features[i], _obj.features[i]);
+		else
+			strcpy(features[i], "n/s");
 	}
+}
+
+Bird::Bird() {
+
+	printf("bird constructor called\n");
+	defaultFieldSet(false);
+	
 };
 
 Bird::~Bird() { printf("bird destructor called\n"); };

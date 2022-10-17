@@ -8,11 +8,19 @@
 
 class Bird : public Animal
 {
+private:
+	void defaultFieldSet(bool _to_copy, Bird& _obj);
+
 public:
 
 	Bird();
 
 	~Bird();
+
+	Bird(Bird& _obj)
+	{
+		defaultFieldSet(true, _obj);
+	}
 
 	char* getFeatureName(int _n) override
 	{

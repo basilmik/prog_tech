@@ -38,6 +38,8 @@ void Keeper::printAll()
 {
 	for (int i = 0; i < numOfAnimals; i++)
 		print(i);
+	if (numOfAnimals == 0)
+		printf("no animals added yet\n");
 };
 
 
@@ -72,17 +74,20 @@ int Keeper::setFilePathMenu()
 			return 0;
 
 		case 0:
+			printf("enter new path:\n");
 			mscanf("%s", path);
 			setLoadFilePath(path);
 			setSaveFilePath(path);
 			break;
 
 		case 1:
+			printf("enter new path:\n");
 			mscanf("%s", path);
 			setLoadFilePath(path);
 			break;
 
 		case 2:
+			printf("enter new path:\n");
 			mscanf("%s", path);
 			setSaveFilePath(path);
 			break;
@@ -209,10 +214,15 @@ int Keeper::saveAllAnimalsToFile()
 		fprintf(fpout, "%d-%d-\n", type, fieldNum);
 
 		for (int j = 0; j < fieldNum; j++)
-			fprintf(fpout, "::%s\n", animals[i]->features[j]);
-		
+		{
+			if (strcmp(animals[i]->features[j], "") == 0)	
+				fprintf(fpout, "-\n");
+			else
+				fprintf(fpout, "%s\n", animals[i]->features[j]);
+		}
 	}
 
+	fprintf(fpout, "EOF");
 	fclose(fpout);
 	return 0;
 };
@@ -241,7 +251,9 @@ void Keeper::addAnimal(int type = 0)
 	Animal* animalToAdd;
 	if (type == 0)
 	type = askTypeToCreate();
-	
+	if (type ==-1)
+		throw e->set("type input error", __LINE__);
+
 	try {
 		animalToAdd = createAnimalOfType(type);
 	}
@@ -284,7 +296,6 @@ void Keeper::addAnimal(int type = 0)
 
 void Keeper::copyAdd(Animal & _obj)
 {
-	//Animal* animalToAdd = new T(_obj);
 
 	Animal* animalToAdd = nullptr;
 
@@ -294,10 +305,10 @@ void Keeper::copyAdd(Animal & _obj)
 		animalToAdd = new Fish((Fish&)_obj);
 		break;
 	case TYPE_CAT:
-		animalToAdd = new Fish((Fish&)_obj);
+		animalToAdd = new Cat((Cat&)_obj);
 		break;
 	case TYPE_BIRD:
-		animalToAdd = new Fish((Fish&)_obj);
+		animalToAdd = new Bird((Bird&)_obj);
 		break;
 	}
 	
@@ -353,8 +364,7 @@ int Keeper::copyMenu()
 		{
 			int id = -1;
 			printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals - 1);
-			scanInRange("%d", &id, 0, numOfAnimals - 1);
-
+			if (scanInRange("%d", &id, 0, numOfAnimals - 1) == 0)
 			copyAdd(*animals[id]);
 		}
 			break;
@@ -381,8 +391,11 @@ int Keeper::askTypeToCreate()
 	printf("TYPE_FISH 1\nTYPE_BIRD 2\nTYPE_CAT 3\n");
 	printf("enter type of animal you would like to create:\n");
 
-	scanInRange("%d", &typeInputed, 1, 3);
-	return typeInputed;
+	
+	if (scanInRange("%d", &typeInputed, 1, 3) == 0)
+		return typeInputed;
+	else
+		return -1;
 }
 
 
@@ -422,7 +435,6 @@ int Keeper::addMenu() {
 			{
 				throw _e;
 			}
-			system("pause");
 			system("cls");
 			editOneMenu(numOfAnimals - 1);
 			break;
@@ -456,10 +468,17 @@ int Keeper::deleteMenu()
 	int take = 0;
 	while (1)
 	{
+		if (numOfAnimals == 0)
+		{
+			system("cls");
+			printf("number of animals is zero\nback to main menu\n");
+			return 0;
+		}
 		printf("DELETE MENU:");
-		printf("\n-1 exit\n1 choose animal to delete\n2 see field values\n");
+		printf("\n-1 exit\n1 choose animal to delete\n2 see all\n3 delete all\n");
 		mscanf("%d", &take);
-
+		
+		
 		switch (take)
 		{
 		case -1:
@@ -470,19 +489,35 @@ int Keeper::deleteMenu()
 		{
 			int id = -1;
 			printf("enter id of animal to delete (from 0 to %d):\n", numOfAnimals - 1);
-			scanInRange("%d", &id, 0, numOfAnimals - 1);
+			if (scanInRange("%d", &id, 0, numOfAnimals - 1) == 0)
 			deleteOne(id);
 		}
 			break;
 
 		case 2:
-		{
-			int id = -1;
-			printf("enter id of animal to see (from 0 to %d):\n", numOfAnimals - 1);
-			scanInRange("%d", &id, 0, numOfAnimals - 1);
-			print(id);
-		}
+			printAll();
 			break;
+
+		case 3:
+		{
+			printf("are you sure you want to delete all?\n0 NO\n1 YES\n");
+			int take = 0;
+			mscanf("%d", &take);
+			switch (take)
+			{
+			case 0: break;
+			case 1:
+			{
+				int originalNum = numOfAnimals;
+				for (int i = originalNum-1; i >= 0; i--)
+					deleteOne(i);
+			}	break;
+			default:
+				printf("unknown command");
+				break;
+			}
+			break;
+		}
 
 		default:
 			printf("unknown command\n");
@@ -531,7 +566,6 @@ int Keeper::editOneMenu(int _id)
 		switch (take)
 		{
 		case -1:
-			system("pause");
 			system("cls");
 			return 0;
 
@@ -539,7 +573,7 @@ int Keeper::editOneMenu(int _id)
 		{
 			int n = -1;
 			printf("number of field to edit (0 - %d):\n", animals[_id]->getFeatureNum() - 1);
-			scanInRange("%d", &n, 0, animals[_id]->getFeatureNum());
+			if (scanInRange("%d", &n, 0, animals[_id]->getFeatureNum()) == 0)
 			setOneFeature(_id, n);
 		}			
 			break;
@@ -567,7 +601,7 @@ int Keeper::editMenu()
 	while (1)
 	{
 		printf("EDIT ANIMALS MENU:");
-		printf("\n-1 exit\n1 choose animal to edit\n2 see field values\n");
+		printf("\n-1 exit\n1 choose animal to edit\n2 see all\n");
 		mscanf("%d", &take);
 
 		switch (take)
@@ -580,9 +614,10 @@ int Keeper::editMenu()
 		{
 			int id = -1;
 			printf("enter id of animal to edit (from 0 to %d):\n", numOfAnimals - 1);
-			scanInRange("%d", &id, 0, numOfAnimals - 1);
-
-			try {
+			
+			if (scanInRange("%d", &id, 0, numOfAnimals - 1) == 0)
+			try 
+			{
 				editOneMenu(id);
 			}
 			catch (Exeption _e)
@@ -594,13 +629,7 @@ int Keeper::editMenu()
 
 
 		case 2:
-		{
-			int n = -1;
-			printf("enter id of animal to see (from 0 to %d):\n", numOfAnimals - 1);
-			scanInRange("%d", &n, 0, numOfAnimals - 1);
-			print(n);
-		}
-			
+			printAll();
 			break;
 
 		default:

@@ -140,7 +140,8 @@ public:
 				_e.show();
 			}
 		}
-		printf("no elements added yet\n");
+		else
+			printf("no elements added yet\n");
 	}
 
 	void callFileMenu()
@@ -158,19 +159,29 @@ public:
 	void presetPath()
 	{
 		setLoadFilePath((char*)"save_load.txt");
-		setSaveFilePath((char*)"save_load2.txt");
+		setSaveFilePath((char*)"save_load.txt");
 	}
 
-	
 	void printAll();
-
 
 	void callCopy()
 	{
-		copyMenu();
+		if (numOfAnimals > 0)
+		{
+			try
+			{
+				copyMenu();
+			}
+			catch (Exeption _e)
+			{
+				_e.show();
+			}
+		}
+		else
+			printf("no elements added yet\n");
+		
 	}
 
 };
-
 
 // EOF

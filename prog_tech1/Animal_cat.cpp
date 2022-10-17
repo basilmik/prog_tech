@@ -5,10 +5,8 @@
 
 Exeption* ec = new Exeption("Animal_cat.cpp");
 
-Cat::Cat() 
+void Cat::defaultFieldSet(bool _to_copy, Cat& _obj = *((Cat*)nullptr))
 {
-	printf("cat constructor called\n");
-
 	setAnimalType(TYPE_CAT);
 
 	int fieldNum = 4;
@@ -24,8 +22,18 @@ Cat::Cat()
 		if (features[i] == NULL)
 			throw ec->set("memory error", __LINE__);
 
-		strcpy(features[i], "n/s");
+		if (_to_copy == true)
+			strcpy(features[i], _obj.features[i]);
+		else
+			strcpy(features[i], "n/s");
 	}
+}
+
+Cat::Cat() 
+{
+	printf("cat constructor called\n");
+
+	defaultFieldSet(false);
 };
 
 Cat::~Cat() { printf("cat destructor called\n"); };

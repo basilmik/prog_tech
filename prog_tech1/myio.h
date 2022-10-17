@@ -3,6 +3,6 @@
 
 int mscanf(const char* _f, void* _x);
 
-void scanInRange(const char* _f, int* _x, int _min, int _max);
+int scanInRange(const char* _f, int* _x, int _min, int _max);
 
 int isInRange(int _val, int _min, int _max);
